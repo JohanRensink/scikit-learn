@@ -896,9 +896,10 @@ class _RidgeGCV(LinearModel):
         """Helper function to avoid code duplication between self._errors_svd
         and self._values_svd.
         """
-        w = ((v + alpha) ** -1) - (alpha ** -1)
-        c = np.dot(U, self._diag_dot(w, UT_y)) + (alpha ** -1) * y
-        G_diag = self._decomp_diag(w, U) + (alpha ** -1)
+        recipr_alpha = (alpha ** -1) if alpha else 0
+        w = ((v + alpha) ** -1) - recipr_alpha
+        c = np.dot(U, self._diag_dot(w, UT_y)) + recipr_alpha * y
+        G_diag = self._decomp_diag(w, U) + recipr_alpha
         if len(y.shape) != 1:
             # handle case where y is 2-d
             G_diag = G_diag[:, np.newaxis]
